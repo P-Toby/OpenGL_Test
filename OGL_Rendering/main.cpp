@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "math_3d.h"
+#include "main.h"
 
 int main()
 {
@@ -40,6 +41,10 @@ int main()
 	//Set openGL window size (Can be made smaller than GLFW window)
 	glViewport(0, 0, wWidth, wHeight);
 
+	//Test dot
+	Vector3f Verts[1];
+	Verts[0] = Vector3f(0.0f, 0.0f, 0.0f);
+
 	//2D Triangle (z coordinates are zero)
 	GLfloat triangle[] = 
 	{
@@ -49,7 +54,42 @@ int main()
 		0.0f,   0.5f,	1.0f
 	};
 	
+	//Create Vector Object Buffer
+	GLuint VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Verts), Verts, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	
+
+	while (!glfwWindowShouldClose(window))
+	{
+		// Check and call events
+		glfwSetKeyCallback(window, key_callback); //Close window if escape pressed
+		glfwPollEvents();
+
+		// Rendering commands here
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		// Swap the buffers
+		glfwSwapBuffers(window);
+	}
+	
 	//Cleanup memory
 	glfwTerminate();
 	return 0;
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+	// When a user presses the escape key, we set the WindowShouldClose property to true, 
+	// closing the application
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, GL_TRUE);
+	}
+
 }
