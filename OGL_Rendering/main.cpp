@@ -13,6 +13,8 @@
 
 int main()
 {
+	bool useWireFrame = false; //Set to true in order to render in wireframe
+
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
@@ -24,7 +26,18 @@ int main()
 		//x		y		z
 		-0.5f,  -0.5f,	0.0f,
 		0.5f,  -0.5f,	0.0f,
-		0.0f,   0.5f,	1.0f
+		0.0f,   0.5f,	1.0f,
+	};
+
+	GLfloat vertices[] = {
+		0.5f,  0.5f, 0.0f,  // Top Right
+		0.5f, -0.5f, 0.0f,  // Bottom Right
+		-0.5f, -0.5f, 0.0f,  // Bottom Left
+		-0.5f,  0.5f, 0.0f   // Top Left 
+	};
+	GLuint indices[] = { 
+		0, 1, 3,   // First Triangle
+		1, 2, 3    // Second Triangle
 	};
 
 	//Define window size
@@ -52,6 +65,7 @@ int main()
 	//Set openGL window size (Can be made smaller than GLFW window)
 	glViewport(0, 0, wWidth, wHeight);
 
+	/////////////////////////////////////////////////////////
 	//Create Vertex Buffer Object and send triangle to buffer
 	GLuint VBO;
 	glGenBuffers(1, &VBO);
@@ -65,20 +79,40 @@ int main()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 
+	
+
+	/////////////////////////////////////////////////////
+	//Element Buffer Object
+	GLuint EBO;
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 	//Vertex array object
 	GLuint VAO;
 	glGenVertexArrays(1, &VAO);
 
+	// 1. Bind Vertex Array Object
 	glBindVertexArray(VAO);
-	// 2. Copy our vertices array in a buffer for OpenGL to use
+	// 2. Copy our vertices array in a vertex buffer for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
-	// 3. Then set our vertex attributes pointers
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	// 3. Copy our index array in a element buffer for OpenGL to use
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	// 3. Then set the vertex attributes pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
-	//4. Unbind the VAO
+	// 4. Unbind VAO (NOT the EBO)
 	glBindVertexArray(0);
 
+	if (useWireFrame)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	
 	//Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -92,7 +126,8 @@ int main()
 
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		//glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
 		// Swap the buffers
@@ -128,7 +163,7 @@ GLuint ShaderMaster()
 
 	//Create Fragment shader///////////////////////////////
 	const GLchar* fragmentShaderSource = "#version 330 core\n out vec4 color; void main(){color = vec4(1.0f, 0.0f, 0.0f, 1.0f);}";
-
+	
 	GLuint fragmentShader;
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
@@ -172,5 +207,4 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	{
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	}
-
 }
