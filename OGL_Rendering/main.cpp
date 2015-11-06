@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "Main.h"
+#include "main.h"
 
 int main()
 {
@@ -58,7 +58,54 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
 
+	///Create shader program
+	GLuint shaderProgram = ShaderMaster();
 
+	//Linking vertex attributes
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+
+	//Vertex array object
+	GLuint VAO;
+	glGenVertexArrays(1, &VAO);
+
+	glBindVertexArray(VAO);
+	// 2. Copy our vertices array in a buffer for OpenGL to use
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+	// 3. Then set our vertex attributes pointers
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	//4. Unbind the VAO
+	glBindVertexArray(0);
+
+	//Game loop
+	while (!glfwWindowShouldClose(window))
+	{
+		// Check and call events
+		glfwSetKeyCallback(window, key_callback); //Close window if escape pressed
+		glfwPollEvents();
+
+		// Rendering commands here
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glUseProgram(shaderProgram);
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindVertexArray(0);
+
+		// Swap the buffers
+		glfwSwapBuffers(window);
+	}
+
+	//Cleanup memory
+	glfwTerminate();
+	return 0;
+}
+
+GLuint ShaderMaster()
+{
 	//Create Vertex Shader////////////////////////////////
 	const GLchar* vertexShaderSource = "#version 330 core\n layout(location = 0) in vec3 position; void main(){gl_Position = vec4(position.x, position.y, position.z, 1.0);}";
 
@@ -114,47 +161,7 @@ int main()
 	}
 	///////////////////////////////////////////////////////
 
-	//Linking vertex attributes
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-
-	//Vertex array object
-	GLuint VAO;
-	glGenVertexArrays(1, &VAO);
-
-	glBindVertexArray(VAO);
-	// 2. Copy our vertices array in a buffer for OpenGL to use
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
-	// 3. Then set our vertex attributes pointers
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-	//4. Unbind the VAO
-	glBindVertexArray(0);
-
-	//Game loop
-	while (!glfwWindowShouldClose(window))
-	{
-		// Check and call events
-		glfwSetKeyCallback(window, key_callback); //Close window if escape pressed
-		glfwPollEvents();
-
-		// Rendering commands here
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		glUseProgram(shaderProgram);
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
-		glBindVertexArray(0);
-
-		// Swap the buffers
-		glfwSwapBuffers(window);
-	}
-
-	//Cleanup memory
-	glfwTerminate();
-	return 0;
+	return shaderProgram;
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
