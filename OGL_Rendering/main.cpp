@@ -13,6 +13,15 @@
 
 int main()
 {
+	tutorialRender();
+
+	//Cleanup memory
+	glfwTerminate();
+	return 0;
+}
+
+int tutorialRender()
+{
 	bool useWireFrame = false; //Set to true in order to render in wireframe
 
 	glfwInit();
@@ -35,7 +44,7 @@ int main()
 		-0.5f, -0.5f, 0.0f,  // Bottom Left
 		-0.5f,  0.5f, 0.0f   // Top Left 
 	};
-	GLuint indices[] = { 
+	GLuint indices[] = {
 		0, 1, 3,   // First Triangle
 		1, 2, 3    // Second Triangle
 	};
@@ -73,13 +82,13 @@ int main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
 
 	///Create shader program
-	GLuint shaderProgram = ShaderMaster();
+	GLuint shaderProgram = ShaderMasterTutorial();
 
 	//Linking vertex attributes
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
 
-	
+
 
 	/////////////////////////////////////////////////////
 	//Element Buffer Object
@@ -112,7 +121,7 @@ int main()
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	}
-	
+
 	//Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -133,13 +142,9 @@ int main()
 		// Swap the buffers
 		glfwSwapBuffers(window);
 	}
-
-	//Cleanup memory
-	glfwTerminate();
-	return 0;
 }
 
-GLuint ShaderMaster()
+GLuint ShaderMasterTutorial()
 {
 	//Create Vertex Shader////////////////////////////////
 	const GLchar* vertexShaderSource = "#version 330 core\n layout(location = 0) in vec3 position; void main(){gl_Position = vec4(position.x, position.y, position.z, 1.0);}";
