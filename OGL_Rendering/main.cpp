@@ -1,8 +1,10 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
+
 #include <stdio.h>  
 #include <stdlib.h>
 #include <iostream>
+#include "math_3d.h"
 
 int main()
 {
@@ -25,15 +27,28 @@ int main()
 		glfwTerminate();
 		return -1;
 	}
+	glfwMakeContextCurrent(window);
+
+	//Initialize GLEW
+	glewExperimental = GL_TRUE;
+	if (glewInit() != GLEW_OK)
+	{
+		std::cout << "Failed to initialize GLEW" << std::endl;
+		return -1;
+	}
+
+	//Set openGL window size (Can be made smaller than GLFW window)
+	glViewport(0, 0, wWidth, wHeight);
 
 	//2D Triangle (z coordinates are zero)
-	GLfloat triangle[] = {
+	GLfloat triangle[] = 
+	{
 		//x		y		z
 		-0.5f,  -0.5f,	0.0f,
 		0.5f,  -0.5f,	0.0f,
 		0.0f,   0.5f,	1.0f
 	};
-
+	
 	//Cleanup memory
 	glfwTerminate();
 	return 0;
