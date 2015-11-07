@@ -8,17 +8,143 @@
 #include <stdio.h>  
 #include <stdlib.h>
 #include <iostream>
-
 #include "main.h"
+
 
 int main()
 {
 	//tutorialRender();
-	assignmentOne();
+	//assignmentOne();
+	assigmentTwo();
+
 
 	//Cleanup memory
 	glfwTerminate();
 	return 0;
+}
+
+int assigmentTwo()
+{
+	//We can draw two independent triangles with their own respective VBOs and VAO
+
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
+	//2D Triangle (z coordinates are zero)
+	GLfloat triangle[] = {
+		//x		y		z
+		-0.4f,  -0.2f,	0.0f,
+		0.0f,  -0.2f,	0.0f,
+		-0.2f,   0.2f,	0.0f,
+	};
+	GLfloat triangleTwo[] = {
+		//x		y		z
+		-0.0f,  -0.2f,	0.0f,
+		0.4f,  -0.2f,	0.0f,
+		0.2f,   0.2f,	0.0f
+	};
+
+	//Define window size
+	GLint wWidth = 1024;
+	GLint wHeight = 768;
+
+	//Create GLFW window
+	GLFWwindow* window = glfwCreateWindow(wWidth, wHeight, "OpenGLTest", nullptr, nullptr);
+
+	if (window == nullptr)
+	{
+		std::cout << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+
+	glewExperimental = GL_TRUE;
+	if (glewInit() != GLEW_OK)
+	{
+		std::cout << "Failed to initialize GLEW" << std::endl;
+		return -1;
+	}
+
+	//Set openGL window size (Can be made smaller than GLFW window)
+	glViewport(0, 0, wWidth, wHeight);
+
+	//Create Vertex Buffer Object and send triangle to buffer
+	GLuint VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+
+	//Create VBO for triangleTwo
+	GLuint VBOTWO;
+	glGenBuffers(1, &VBOTWO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOTWO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleTwo), triangleTwo, GL_STATIC_DRAW);
+
+	///Create shader program
+	GLuint shaderProgram = ShaderMasterTutorial();
+
+	//Linking vertex attributes
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+
+	//Vertex array object
+	GLuint VAO;
+	glGenVertexArrays(1, &VAO);
+
+	glBindVertexArray(VAO);
+	// 2. Copy our vertices array in a buffer for OpenGL to use
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
+	// 3. Then set our vertex attributes pointers
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	//4. Unbind the VAO
+	glBindVertexArray(0);
+
+	//Vertex array object for triangle two
+	GLuint VAOTWO;
+	glGenVertexArrays(1, &VAOTWO);
+
+	glBindVertexArray(VAOTWO);
+	// 2. Copy our vertices array in a buffer for OpenGL to use
+	glBindBuffer(GL_ARRAY_BUFFER, VBOTWO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(triangleTwo), triangleTwo, GL_STATIC_DRAW);
+	// 3. Then set our vertex attributes pointers
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glEnableVertexAttribArray(0);
+	//4. Unbind the VAO
+	glBindVertexArray(0);
+
+	//Game loop
+	while (!glfwWindowShouldClose(window))
+	{
+		// Check and call events
+		glfwSetKeyCallback(window, key_callback); //Close window if escape pressed
+		glfwPollEvents();
+
+		// Rendering commands here
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		glUseProgram(ShaderMasterTwo());
+		
+		//Draw first triangle
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindVertexArray(0);
+
+		//Draw second triangle
+		glBindVertexArray(VAOTWO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindVertexArray(0);
+
+		// Swap the buffers
+		glfwSwapBuffers(window);
+	}
 }
 
 int assignmentOne()
@@ -241,6 +367,75 @@ int tutorialRender()
 		// Swap the buffers
 		glfwSwapBuffers(window);
 	}
+}
+
+GLuint ShaderMasterTwo()
+{
+	//Create Vertex Shader////////////////////////////////
+	const GLchar* vertexShaderSource = "#version 330 core\n layout(location = 0) in vec3 position; void main(){gl_Position = vec4(position.x, position.y, position.z, 1.0);}";
+
+	GLuint vertexShader;
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glCompileShader(vertexShader);
+
+	GLint success;
+	GLchar infoLog[512];
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+
+	if (!success)
+	{
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	///////////////////////////////////////////////////////
+
+	GLuint fragmentShader = FragmentMasterTwo();
+
+	//Create Shader program////////////////////////////////
+	GLuint shaderProgram;
+	shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+	//After linking we can delete the shaders since they are contained in the shader program
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success) {
+		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+	///////////////////////////////////////////////////////
+
+	return shaderProgram;
+}
+
+GLuint FragmentMasterTwo()
+{
+	GLint success;
+	GLchar infoLog[512];
+	//Create Fragment shader///////////////////////////////
+	const GLchar* fragmentShaderSource = "#version 330 core\n out vec4 color; void main(){color = vec4(1.0f, 0.0f, 0.0f, 1.0f);}";
+
+	GLuint fragmentShader;
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+
+	if (!success)
+	{
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	///////////////////////////////////////////////////////
+
+	return fragmentShader;
 }
 
 GLuint ShaderMasterTutorial()
