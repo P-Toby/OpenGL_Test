@@ -8,6 +8,8 @@
 #include <stdio.h>  
 #include <stdlib.h>
 #include <iostream>
+#include <fstream>
+#include <string>
 
 #include "shaderPractice.h"
 #include "keycallback.h"
@@ -67,9 +69,10 @@ int shaderPractice()
 	glEnableVertexAttribArray(0);
 	glBindVertexArray(0); //Unbind VAO until ready to render
 
+	//Create shaderprogram
 
 
-						  //Game loop
+	//Game loop
 	while (!glfwWindowShouldClose(window))
 	{
 		// Check and call events
@@ -92,6 +95,9 @@ int shaderPractice()
 
 GLuint createShaderProgram()
 {
+	//Vertex Shader
+	 
 
 	return 0;
 }
+
