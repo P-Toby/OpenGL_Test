@@ -4,5 +4,6 @@
 
 int shaderPractice();
 GLuint createShaderProgram();
+std::string readShaderCode(const char* fileName);
 
 #endif

@@ -52,5 +52,8 @@
     <None Include="VertexShaderSource.glsl">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="FragmentShaderSource.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

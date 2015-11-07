@@ -70,7 +70,7 @@ int shaderPractice()
 	glBindVertexArray(0); //Unbind VAO until ready to render
 
 	//Create shaderprogram
-
+	GLuint shaderProgram = createShaderProgram();
 
 	//Game loop
 	while (!glfwWindowShouldClose(window))
@@ -83,8 +83,11 @@ int shaderPractice()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-
 		//Draw
+		glUseProgram(shaderProgram);
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
 
 		// Swap the buffers
 		glfwSwapBuffers(window);
@@ -95,9 +98,75 @@ int shaderPractice()
 
 GLuint createShaderProgram()
 {
-	//Vertex Shader
-	 
+	GLint success;
+	GLchar infoLog[512];
 
-	return 0;
+	//Read Vertex Shader
+	std::string readSource = readShaderCode("VertexShaderSource.glsl");
+	const GLchar* vertexShaderSource = readSource.c_str();
+
+	//Create Vertex shader
+	GLuint vertexShader;
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+	glCompileShader(vertexShader);
+
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	if (!success)
+	{
+		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+	//////////////////////
+
+	//Read Fragment shader
+	readSource = readShaderCode("FragmentShaderSource.glsl");
+	const GLchar* fragmentShaderSource = readSource.c_str();
+
+	//Create Fragment shader
+	GLuint fragmentShader;
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+
+	if (!success)
+	{
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+	///////////////////////////////////////////////////////
+
+	//Create Shader program////////////////////////////////
+	GLuint shaderProgram;
+	shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glLinkProgram(shaderProgram);
+	//After linking we can delete the shaders since they are contained in the shader program
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
+
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	if (!success) {
+		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::PROGRAM::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+	///////////////////////////////////////////////////////
+
+	return shaderProgram;
 }
 
+std::string readShaderCode(const char* fileName)
+{
+	//Read from file
+	std::ifstream inFile;
+	inFile.open(fileName);
+	if (inFile.fail())
+	{
+		std::cout << "GLSL Shader not found! " << fileName << std::endl;
+	}
+
+	return std::string(std::istreambuf_iterator<char>(inFile), std::istreambuf_iterator<char>());
+}

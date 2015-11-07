@@ -161,6 +161,7 @@
     <ClCompile Include="shaderPractice.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="FragmentShaderSource.glsl" />
     <None Include="VertexShaderSource.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
