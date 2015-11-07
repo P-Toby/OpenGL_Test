@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include "hellotriangle_and_assignments.h"
+#include "keycallback.h"
 
 int assigmentTwo()
 {
@@ -81,7 +82,7 @@ int assigmentTwo()
 	//Vertex array object
 	GLuint VAO;
 	glGenVertexArrays(1, &VAO);
-
+	// 1. Bind Vertex Array Object
 	glBindVertexArray(VAO);
 	// 2. Copy our vertices array in a buffer for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -92,10 +93,12 @@ int assigmentTwo()
 	//4. Unbind the VAO
 	glBindVertexArray(0);
 
+	////////////////////////////////////////////////
+
 	//Vertex array object for triangle two
 	GLuint VAOTWO;
 	glGenVertexArrays(1, &VAOTWO);
-
+	// 1. Bind Vertex Array Object
 	glBindVertexArray(VAOTWO);
 	// 2. Copy our vertices array in a buffer for OpenGL to use
 	glBindBuffer(GL_ARRAY_BUFFER, VBOTWO);
@@ -522,12 +525,3 @@ GLuint ShaderMasterTutorial()
 	return shaderProgram;
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
-{
-	// When a user presses the escape key, we set the WindowShouldClose property to true, 
-	// closing the application
-	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-	{
-		glfwSetWindowShouldClose(window, GL_TRUE);
-	}
-}

@@ -10,15 +10,18 @@
 #include <iostream>
 #include "main.h"
 #include "hellotriangle_and_assignments.h"
+#include "shaderPractice.h"
 
 
 int main()
 {
 	//tutorialRender();
 	//assignmentOne();
-	assigmentTwo();
+	//assigmentTwo();
+	shaderPractice();
 
 	//Cleanup memory
 	glfwTerminate();
 	return 0;
 }
+
