@@ -21,9 +21,15 @@
     <ClInclude Include="main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="hellotriangle_and_assignments.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hellotriangle_and_assigments.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
