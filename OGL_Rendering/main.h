@@ -5,7 +5,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 GLuint ShaderMasterTutorial();
 GLuint ShaderMasterTwo();
-GLuint FragmentMasterTwo();
+GLuint ShaderMasterTwo(bool Orange);
+GLuint FragmentMasterOrange();
+GLuint FragmentMasterYellow();
 
 int tutorialRender();
 int assignmentOne();

@@ -130,14 +130,15 @@ int assigmentTwo()
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glUseProgram(ShaderMasterTwo());
 		
 		//Draw first triangle
+		glUseProgram(ShaderMasterTwo(true));
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glBindVertexArray(0);
 
 		//Draw second triangle
+		glUseProgram(ShaderMasterTwo(false));
 		glBindVertexArray(VAOTWO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 		glBindVertexArray(0);
@@ -369,7 +370,8 @@ int tutorialRender()
 	}
 }
 
-GLuint ShaderMasterTwo()
+//Fugly solution but whatever
+GLuint ShaderMasterTwo(bool Orange)
 {
 	//Create Vertex Shader////////////////////////////////
 	const GLchar* vertexShaderSource = "#version 330 core\n layout(location = 0) in vec3 position; void main(){gl_Position = vec4(position.x, position.y, position.z, 1.0);}";
@@ -390,8 +392,17 @@ GLuint ShaderMasterTwo()
 	}
 
 	///////////////////////////////////////////////////////
+	GLuint fragmentShader;
+	if (Orange)
+	{
+		fragmentShader = FragmentMasterOrange();
+	}
+	else
+	{
+		fragmentShader = FragmentMasterYellow();
+	}
 
-	GLuint fragmentShader = FragmentMasterTwo();
+	
 
 	//Create Shader program////////////////////////////////
 	GLuint shaderProgram;
@@ -413,12 +424,37 @@ GLuint ShaderMasterTwo()
 	return shaderProgram;
 }
 
-GLuint FragmentMasterTwo()
+GLuint FragmentMasterOrange()
 {
 	GLint success;
 	GLchar infoLog[512];
 	//Create Fragment shader///////////////////////////////
-	const GLchar* fragmentShaderSource = "#version 330 core\n out vec4 color; void main(){color = vec4(1.0f, 0.0f, 0.0f, 1.0f);}";
+	const GLchar* fragmentShaderSource = "#version 330 core\n out vec4 color; void main(){color = vec4(1.0f, 0.5f, 0.2f, 1.0f);}";
+
+	GLuint fragmentShader;
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+	glCompileShader(fragmentShader);
+
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+
+	if (!success)
+	{
+		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+	}
+
+	///////////////////////////////////////////////////////
+
+	return fragmentShader;
+}
+
+GLuint FragmentMasterYellow()
+{
+	GLint success;
+	GLchar infoLog[512];
+	//Create Fragment shader///////////////////////////////
+	const GLchar* fragmentShaderSource = "#version 330 core\n out vec4 color; void main(){color = vec4(1.0f, 1.0f, 0.0f, 1.0f);}";
 
 	GLuint fragmentShader;
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
