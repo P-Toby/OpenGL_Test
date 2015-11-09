@@ -48,10 +48,10 @@ int shaderPractice()
 	glViewport(0, 0, wWidth, wHeight);
 
 	GLfloat triangle[] = {
-		//x y z
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.0f, 0.5f, 1.0f
+		// Positions         // Colors
+		0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // Bottom Right
+		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // Bottom Left
+		0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // Top 
 	};
 
 	//Create VBO and send triangle
@@ -65,8 +65,13 @@ int shaderPractice()
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	// Position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
+	// Color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+	glEnableVertexAttribArray(1);
+
 	glBindVertexArray(0); //Unbind VAO until ready to render
 
 	//Create shaderprogram
@@ -80,14 +85,16 @@ int shaderPractice()
 		glfwPollEvents();
 
 		// Rendering commands here
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		GLfloat timeValue = glfwGetTime();
+		
+		glClearColor(0.1f, 0.3f, 0.5f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//Update the uniform color in shader
-		GLfloat timeValue = glfwGetTime();
-		GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
-		GLint vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-		glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+		//Set position uniform that can offset the triangle in the x direction
+		
+		GLfloat xvalue = (sin(timeValue*3) / 2);
+		GLint vertexOffsetLocation = glGetUniformLocation(shaderProgram, "xoffset");
+		glUniform1f(vertexOffsetLocation, xvalue);
 
 		//Draw
 		glUseProgram(shaderProgram);

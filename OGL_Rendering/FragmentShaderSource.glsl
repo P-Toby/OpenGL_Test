@@ -1,9 +1,9 @@
 #version 330 core
-out vec4 color;
 
-uniform vec4 ourColor; //We set this variable in the OpenGL code.
+in vec3 ourColor;
+out vec4 color;
 
 void main()
 {
-	color = ourColor;
+	color = vec4(ourColor, 1.0f);
 }
