@@ -87,7 +87,7 @@ int shaderPractice()
 		// Rendering commands here
 		GLfloat timeValue = glfwGetTime();
 		
-		glClearColor(0.1f, 0.3f, 0.5f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//Set position uniform that can offset the triangle in the x direction
