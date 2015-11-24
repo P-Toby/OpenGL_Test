@@ -92,9 +92,9 @@ int shaderPractice()
 
 		//Set position uniform that can offset the triangle in the x direction
 		
-		GLfloat xvalue = (sin(timeValue*3) / 2);
-		GLint vertexOffsetLocation = glGetUniformLocation(shaderProgram, "xoffset");
-		glUniform1f(vertexOffsetLocation, xvalue);
+		//GLfloat xvalue = (sin(timeValue*3) / 2);
+		//GLint vertexOffsetLocation = glGetUniformLocation(shaderProgram, "xoffset");
+		//glUniform1f(vertexOffsetLocation, xvalue);
 
 		//Draw
 		glUseProgram(shaderProgram);
