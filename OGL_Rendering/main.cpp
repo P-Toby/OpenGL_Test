@@ -18,7 +18,7 @@ int main()
 	//tutorialRender();
 	//assignmentOne();
 	//assigmentTwo();
-	shaderPractice();
+	//shaderPractice();
 
 	//Cleanup memory
 	glfwTerminate();
