@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="bthassignment.h" />
     <ClInclude Include="hellotriangle_and_assignments.h" />
     <ClInclude Include="keycallback.h" />
     <ClInclude Include="main.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="shaderPractice.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bthassignment.cpp" />
     <ClCompile Include="hellotriangle_and_assigments.cpp" />
     <ClCompile Include="keycallback.cpp" />
     <ClCompile Include="main.cpp" />

@@ -12,6 +12,8 @@
 #include "hellotriangle_and_assignments.h"
 #include "shaderPractice.h"
 
+#include "bthassignment.h"
+
 
 int main()
 {
@@ -19,6 +21,8 @@ int main()
 	//assignmentOne();
 	//assigmentTwo();
 	//shaderPractice();
+
+	bthAssignment();
 
 	//Cleanup memory
 	glfwTerminate();
