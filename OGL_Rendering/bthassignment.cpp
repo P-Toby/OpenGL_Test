@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
-#include <string>
 
 #include "shaderPractice.h"
 #include "keycallback.h"
@@ -50,6 +49,44 @@ int bthAssignment()
 	//Set openGL window size (Can be made smaller than GLFW window)
 	glViewport(0, 0, wWidth, wHeight);
 
+	///Render a quad with indices
+	GLfloat vertices[] = {
+		//Positions
+		0.5f,  0.5f, 0.0f,  // Top Right
+		0.5f, -0.5f, 0.0f,  // Bottom Right
+		-0.5f, -0.5f, 0.0f,  // Bottom Left
+		-0.5f,  0.5f, 0.0f   // Top Left 
+	};
+	GLuint indices[] = {
+		0, 1, 3,   // First Triangle
+		1, 2, 3    // Second Triangle
+	};
+
+	///VAO
+	GLuint VAO;
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO); //Important we bind the VAO first
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+
+	///VBO
+	GLuint VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	///Create EBO
+	GLuint EBO;
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0); //Unbind VBO for now
+	glBindVertexArray(0); //Unbind VAO as well until we are ready to use it
+
+	GLuint shaderProgram = createSP();
+
 	//Render loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -63,9 +100,19 @@ int bthAssignment()
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		glUseProgram(shaderProgram);
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0); //Unbind VAO when done
+
 		// Swap the buffers
 		glfwSwapBuffers(window);
 	}
+
+	//Delete the buffers when we are done using them
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 
 	return 0;
 }

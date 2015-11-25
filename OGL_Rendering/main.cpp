@@ -17,7 +17,7 @@
 
 int main()
 {
-	//tutorialRender();
+	tutorialRender();
 	//assignmentOne();
 	//assigmentTwo();
 	//shaderPractice();
