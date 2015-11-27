@@ -14,7 +14,6 @@
 #include "shaderPractice.h"
 #include "keycallback.h"
 
-#include <SOIL.h>
 
 int shaderPractice()
 {
@@ -56,6 +55,8 @@ int shaderPractice()
 		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // Bottom Left
 		0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // Top 
 	};
+
+	//Texturing
 	GLfloat texCoords[] =
 	{
 		0.0f, 0.0f,
@@ -66,6 +67,8 @@ int shaderPractice()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	int width, height;
+
 
 	//Create VBO and send triangle
 	GLuint VBO;
