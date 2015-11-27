@@ -305,7 +305,6 @@ int tutorialRender()
 	glEnableVertexAttribArray(0);
 
 
-
 	/////////////////////////////////////////////////////
 	//Element Buffer Object
 	GLuint EBO;

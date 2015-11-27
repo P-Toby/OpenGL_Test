@@ -12,17 +12,13 @@
 #include "hellotriangle_and_assignments.h"
 #include "shaderPractice.h"
 
-#include "bthassignment.h"
-
 
 int main()
 {
-	tutorialRender();
+	//tutorialRender();
 	//assignmentOne();
 	//assigmentTwo();
-	//shaderPractice();
-
-	bthAssignment();
+	shaderPractice();
 
 	//Cleanup memory
 	glfwTerminate();

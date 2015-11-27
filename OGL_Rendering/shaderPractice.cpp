@@ -14,6 +14,8 @@
 #include "shaderPractice.h"
 #include "keycallback.h"
 
+#include <SOIL.h>
+
 int shaderPractice()
 {
 	glfwInit();
@@ -47,12 +49,23 @@ int shaderPractice()
 	//Set openGL window size (Can be made smaller than GLFW window)
 	glViewport(0, 0, wWidth, wHeight);
 
-	GLfloat triangle[] = {
+	GLfloat triangle[] = 
+	{
 		// Positions         // Colors
 		0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // Bottom Right
 		-0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // Bottom Left
 		0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // Top 
 	};
+	GLfloat texCoords[] =
+	{
+		0.0f, 0.0f,
+		1.0f, 0.0f,
+		0.5f, 1.0f
+	};
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	//Create VBO and send triangle
 	GLuint VBO;
