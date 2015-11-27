@@ -4,6 +4,8 @@
 //Include GLFW  
 #include <GLFW\glfw3.h>  
 
+#include <SOIL.h>
+
 //Include the standard C++ headers  
 #include <stdio.h>  
 #include <stdlib.h>
@@ -68,7 +70,15 @@ int shaderPractice()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	int width, height;
-
+	unsigned char* image = SOIL_load_image("container.jpg", &width, &height, 0, SOIL_LOAD_RGB);
+	if (image == '\0')
+	{
+		std::cout << "Unable to load image." << std::endl;
+	}
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
 	//Create VBO and send triangle
 	GLuint VBO;
