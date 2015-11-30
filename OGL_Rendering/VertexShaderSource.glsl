@@ -11,5 +11,6 @@ void main()
 	gl_Position = vec4(position.x, position.y, position.z, 1.0);
 	ourColor = color; //set ourColor the input color we got from the vertex data
                     //instead of using uniform variable
-	TexCoord = texCoord;
+	//Flip y axis of texture coordinate
+	TexCoord = vec2(texCoord.x, texCoord.y * -1.0);
 }
